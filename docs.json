@@ -1,0 +1,544 @@
+[
+  {
+    "Constant" : [
+
+    ],
+    "submodules" : [
+
+    ],
+    "Function" : [
+
+    ],
+    "Variable" : [
+      {
+        "doc" : "Dictionary of short browser names to bundle IDs. `browser` \/ `defaultBrowser`\naccept either a name from this table (e.g. `\"chrome\"`) or a raw bundle ID.\nAdd your own entries as needed.",
+        "stripped_doc" : [
+          "Dictionary of short browser names to bundle IDs. `browser` \/ `defaultBrowser`",
+          "accept either a name from this table (e.g. `\"chrome\"`) or a raw bundle ID.",
+          "Add your own entries as needed."
+        ],
+        "name" : "browsers",
+        "parameters" : [
+
+        ],
+        "notes" : [
+
+        ],
+        "signature" : "BrowserRouter.browsers",
+        "type" : "Variable",
+        "returns" : [
+
+        ],
+        "desc" : "Dictionary of short browser names to bundle IDs. `browser` \/ `defaultBrowser`",
+        "def" : "BrowserRouter.browsers"
+      },
+      {
+        "doc" : "Bundle ID (or name from `browsers`) of the browser used when no rule\nmatches. Default: `\"chromium\"`.",
+        "stripped_doc" : [
+          "Bundle ID (or name from `browsers`) of the browser used when no rule",
+          "matches. Default: `\"chromium\"`."
+        ],
+        "name" : "defaultBrowser",
+        "parameters" : [
+
+        ],
+        "notes" : [
+
+        ],
+        "signature" : "BrowserRouter.defaultBrowser",
+        "type" : "Variable",
+        "returns" : [
+
+        ],
+        "desc" : "Bundle ID (or name from `browsers`) of the browser used when no rule",
+        "def" : "BrowserRouter.defaultBrowser"
+      },
+      {
+        "doc" : "Optional profile directory (Chromium-based browsers) for the default browser.",
+        "stripped_doc" : [
+          "Optional profile directory (Chromium-based browsers) for the default browser."
+        ],
+        "name" : "defaultProfile",
+        "parameters" : [
+
+        ],
+        "notes" : [
+
+        ],
+        "signature" : "BrowserRouter.defaultProfile",
+        "type" : "Variable",
+        "returns" : [
+
+        ],
+        "desc" : "Optional profile directory (Chromium-based browsers) for the default browser.",
+        "def" : "BrowserRouter.defaultProfile"
+      },
+      {
+        "doc" : "Optional list of extra command-line flags for the default browser.",
+        "stripped_doc" : [
+          "Optional list of extra command-line flags for the default browser."
+        ],
+        "name" : "defaultArgs",
+        "parameters" : [
+
+        ],
+        "notes" : [
+
+        ],
+        "signature" : "BrowserRouter.defaultArgs",
+        "type" : "Variable",
+        "returns" : [
+
+        ],
+        "desc" : "Optional list of extra command-line flags for the default browser.",
+        "def" : "BrowserRouter.defaultArgs"
+      },
+      {
+        "doc" : "Ordered list of routing rules; the first matching rule wins. Each rule is a\ntable with:\n * browser - bundle ID or name from `browsers` of the target browser (required)\n * hosts - list of Lua patterns matched against the full URL\n * match - optional `function(url, scheme, host, params) -> boolean`, checked\n   in addition to `hosts`\n * profile - optional profile directory name (Chromium-based browsers, e.g.\n   `\"Default\"`, `\"Profile 1\"`; see chrome:\/\/version > Profile Path)\n * args - optional list of extra command-line flags (e.g.\n   `{ \"--no-default-browser-check\" }`)",
+        "stripped_doc" : [
+          "Ordered list of routing rules; the first matching rule wins. Each rule is a",
+          "table with:",
+          " * browser - bundle ID or name from `browsers` of the target browser (required)",
+          " * hosts - list of Lua patterns matched against the full URL",
+          " * match - optional `function(url, scheme, host, params) -> boolean`, checked",
+          "   in addition to `hosts`",
+          " * profile - optional profile directory name (Chromium-based browsers, e.g.",
+          "   `\"Default\"`, `\"Profile 1\"`; see chrome:\/\/version > Profile Path)",
+          " * args - optional list of extra command-line flags (e.g.",
+          "   `{ \"--no-default-browser-check\" }`)"
+        ],
+        "name" : "rules",
+        "parameters" : [
+
+        ],
+        "notes" : [
+
+        ],
+        "signature" : "BrowserRouter.rules",
+        "type" : "Variable",
+        "returns" : [
+
+        ],
+        "desc" : "Ordered list of routing rules; the first matching rule wins. Each rule is a",
+        "def" : "BrowserRouter.rules"
+      },
+      {
+        "doc" : "List of `function(url, scheme, host, params) -> newUrl|nil` applied before\nrouting, e.g. to unwrap redirect links. Returning nil keeps the URL as is.\nBy default unwraps links opened from Microsoft Teams.",
+        "stripped_doc" : [
+          "List of `function(url, scheme, host, params) -> newUrl|nil` applied before",
+          "routing, e.g. to unwrap redirect links. Returning nil keeps the URL as is.",
+          "By default unwraps links opened from Microsoft Teams."
+        ],
+        "name" : "urlRewriters",
+        "parameters" : [
+
+        ],
+        "notes" : [
+
+        ],
+        "signature" : "BrowserRouter.urlRewriters",
+        "type" : "Variable",
+        "returns" : [
+
+        ],
+        "desc" : "List of `function(url, scheme, host, params) -> newUrl|nil` applied before",
+        "def" : "BrowserRouter.urlRewriters"
+      }
+    ],
+    "stripped_doc" : [
+
+    ],
+    "type" : "Module",
+    "Deprecated" : [
+
+    ],
+    "desc" : "Route http(s) links to different browsers based on URL patterns.",
+    "Constructor" : [
+
+    ],
+    "doc" : "Route http(s) links to different browsers based on URL patterns.\n\nMake Hammerspoon the default web browser (System Settings > Desktop & Dock >\nDefault web browser), then every link you click is handed to this Spoon,\nwhich picks a browser using an ordered list of rules (first match wins) and\nfalls back to `defaultBrowser`.\n\nRules can also pass a profile (Chromium-based browsers) and extra\ncommand-line flags to the target browser:\n\n  hs.loadSpoon(\"BrowserRouter\")\n  spoon.BrowserRouter:configure({\n    defaultBrowser = \"app.zen-browser.zen\",\n    rules = {\n      {\n        browser = \"com.google.Chrome\",\n        profile = \"Profile 1\",\n        args    = { \"--no-default-browser-check\" },\n        hosts   = { \"^https:\/\/work%.example%.com\/\" },\n      },\n    },\n  }):start()\n\nDownload: https:\/\/github.com\/thedenische\/BrowserRouter.spoon",
+    "Field" : [
+
+    ],
+    "Command" : [
+
+    ],
+    "Method" : [
+      {
+        "doc" : "Set any of `defaultBrowser`, `defaultProfile`, `defaultArgs`, `rules`,\n`urlRewriters`, `browsers` from a table (e.g. one loaded from a private\nconfig file). `browsers` entries are merged into the built-in dictionary.\n\nParameters:\n * config - table with any of the fields above; missing fields are left\n   unchanged\n\nReturns:\n * The BrowserRouter object",
+        "stripped_doc" : [
+          "Set any of `defaultBrowser`, `defaultProfile`, `defaultArgs`, `rules`,",
+          "`urlRewriters`, `browsers` from a table (e.g. one loaded from a private",
+          "config file). `browsers` entries are merged into the built-in dictionary.",
+          ""
+        ],
+        "name" : "configure",
+        "parameters" : [
+          " * config - table with any of the fields above; missing fields are left",
+          "   unchanged",
+          ""
+        ],
+        "notes" : [
+
+        ],
+        "signature" : "BrowserRouter:configure(config) -> self",
+        "type" : "Method",
+        "returns" : [
+          " * The BrowserRouter object"
+        ],
+        "desc" : "Set any of `defaultBrowser`, `defaultProfile`, `defaultArgs`, `rules`,",
+        "def" : "BrowserRouter:configure(config) -> self"
+      },
+      {
+        "doc" : "Open `url` in the browser with bundle ID `browser`.\n\nParameters:\n * url - the URL to open\n * browser - bundle ID or name from `browsers`\n * profile - optional profile directory (Chromium-based browsers)\n * args - optional list of extra command-line flags\n\nReturns:\n * The BrowserRouter object\n\nNotes:\n * Profile and flags are command-line arguments, so they only take effect\n   when the browser is launched; if it is already running the URL opens in\n   its current (last used) profile.",
+        "stripped_doc" : [
+          "Open `url` in the browser with bundle ID `browser`.",
+          ""
+        ],
+        "name" : "openURL",
+        "parameters" : [
+          " * url - the URL to open",
+          " * browser - bundle ID or name from `browsers`",
+          " * profile - optional profile directory (Chromium-based browsers)",
+          " * args - optional list of extra command-line flags",
+          ""
+        ],
+        "notes" : [
+          " * Profile and flags are command-line arguments, so they only take effect",
+          "   when the browser is launched; if it is already running the URL opens in",
+          "   its current (last used) profile."
+        ],
+        "signature" : "BrowserRouter:openURL(url, browser[, profile[, args]]) -> self",
+        "type" : "Method",
+        "returns" : [
+          " * The BrowserRouter object",
+          ""
+        ],
+        "desc" : "Open `url` in the browser with bundle ID `browser`.",
+        "def" : "BrowserRouter:openURL(url, browser[, profile[, args]]) -> self"
+      },
+      {
+        "doc" : "Rewrite `url` via `urlRewriters`, find the first matching rule and open it\nin that rule's browser (or the default browser).\n\nParameters:\n * url - the full URL\n * scheme, host, params - optional, as passed by `hs.urlevent.httpCallback`\n\nReturns:\n * The BrowserRouter object",
+        "stripped_doc" : [
+          "Rewrite `url` via `urlRewriters`, find the first matching rule and open it",
+          "in that rule's browser (or the default browser).",
+          ""
+        ],
+        "name" : "route",
+        "parameters" : [
+          " * url - the full URL",
+          " * scheme, host, params - optional, as passed by `hs.urlevent.httpCallback`",
+          ""
+        ],
+        "notes" : [
+
+        ],
+        "signature" : "BrowserRouter:route(url[, scheme, host, params]) -> self",
+        "type" : "Method",
+        "returns" : [
+          " * The BrowserRouter object"
+        ],
+        "desc" : "Rewrite `url` via `urlRewriters`, find the first matching rule and open it",
+        "def" : "BrowserRouter:route(url[, scheme, host, params]) -> self"
+      },
+      {
+        "doc" : "Start handling http(s) links (sets `hs.urlevent.httpCallback`).\n\nReturns:\n * The BrowserRouter object",
+        "stripped_doc" : [
+          "Start handling http(s) links (sets `hs.urlevent.httpCallback`).",
+          ""
+        ],
+        "name" : "start",
+        "parameters" : [
+
+        ],
+        "notes" : [
+
+        ],
+        "signature" : "BrowserRouter:start() -> self",
+        "type" : "Method",
+        "returns" : [
+          " * The BrowserRouter object"
+        ],
+        "desc" : "Start handling http(s) links (sets `hs.urlevent.httpCallback`).",
+        "def" : "BrowserRouter:start() -> self"
+      },
+      {
+        "doc" : "Stop handling http(s) links (clears `hs.urlevent.httpCallback`).\n\nReturns:\n * The BrowserRouter object",
+        "stripped_doc" : [
+          "Stop handling http(s) links (clears `hs.urlevent.httpCallback`).",
+          ""
+        ],
+        "name" : "stop",
+        "parameters" : [
+
+        ],
+        "notes" : [
+
+        ],
+        "signature" : "BrowserRouter:stop() -> self",
+        "type" : "Method",
+        "returns" : [
+          " * The BrowserRouter object"
+        ],
+        "desc" : "Stop handling http(s) links (clears `hs.urlevent.httpCallback`).",
+        "def" : "BrowserRouter:stop() -> self"
+      }
+    ],
+    "items" : [
+      {
+        "doc" : "Dictionary of short browser names to bundle IDs. `browser` \/ `defaultBrowser`\naccept either a name from this table (e.g. `\"chrome\"`) or a raw bundle ID.\nAdd your own entries as needed.",
+        "stripped_doc" : [
+          "Dictionary of short browser names to bundle IDs. `browser` \/ `defaultBrowser`",
+          "accept either a name from this table (e.g. `\"chrome\"`) or a raw bundle ID.",
+          "Add your own entries as needed."
+        ],
+        "name" : "browsers",
+        "parameters" : [
+
+        ],
+        "notes" : [
+
+        ],
+        "signature" : "BrowserRouter.browsers",
+        "type" : "Variable",
+        "returns" : [
+
+        ],
+        "desc" : "Dictionary of short browser names to bundle IDs. `browser` \/ `defaultBrowser`",
+        "def" : "BrowserRouter.browsers"
+      },
+      {
+        "doc" : "Optional list of extra command-line flags for the default browser.",
+        "stripped_doc" : [
+          "Optional list of extra command-line flags for the default browser."
+        ],
+        "name" : "defaultArgs",
+        "parameters" : [
+
+        ],
+        "notes" : [
+
+        ],
+        "signature" : "BrowserRouter.defaultArgs",
+        "type" : "Variable",
+        "returns" : [
+
+        ],
+        "desc" : "Optional list of extra command-line flags for the default browser.",
+        "def" : "BrowserRouter.defaultArgs"
+      },
+      {
+        "doc" : "Bundle ID (or name from `browsers`) of the browser used when no rule\nmatches. Default: `\"chromium\"`.",
+        "stripped_doc" : [
+          "Bundle ID (or name from `browsers`) of the browser used when no rule",
+          "matches. Default: `\"chromium\"`."
+        ],
+        "name" : "defaultBrowser",
+        "parameters" : [
+
+        ],
+        "notes" : [
+
+        ],
+        "signature" : "BrowserRouter.defaultBrowser",
+        "type" : "Variable",
+        "returns" : [
+
+        ],
+        "desc" : "Bundle ID (or name from `browsers`) of the browser used when no rule",
+        "def" : "BrowserRouter.defaultBrowser"
+      },
+      {
+        "doc" : "Optional profile directory (Chromium-based browsers) for the default browser.",
+        "stripped_doc" : [
+          "Optional profile directory (Chromium-based browsers) for the default browser."
+        ],
+        "name" : "defaultProfile",
+        "parameters" : [
+
+        ],
+        "notes" : [
+
+        ],
+        "signature" : "BrowserRouter.defaultProfile",
+        "type" : "Variable",
+        "returns" : [
+
+        ],
+        "desc" : "Optional profile directory (Chromium-based browsers) for the default browser.",
+        "def" : "BrowserRouter.defaultProfile"
+      },
+      {
+        "doc" : "Ordered list of routing rules; the first matching rule wins. Each rule is a\ntable with:\n * browser - bundle ID or name from `browsers` of the target browser (required)\n * hosts - list of Lua patterns matched against the full URL\n * match - optional `function(url, scheme, host, params) -> boolean`, checked\n   in addition to `hosts`\n * profile - optional profile directory name (Chromium-based browsers, e.g.\n   `\"Default\"`, `\"Profile 1\"`; see chrome:\/\/version > Profile Path)\n * args - optional list of extra command-line flags (e.g.\n   `{ \"--no-default-browser-check\" }`)",
+        "stripped_doc" : [
+          "Ordered list of routing rules; the first matching rule wins. Each rule is a",
+          "table with:",
+          " * browser - bundle ID or name from `browsers` of the target browser (required)",
+          " * hosts - list of Lua patterns matched against the full URL",
+          " * match - optional `function(url, scheme, host, params) -> boolean`, checked",
+          "   in addition to `hosts`",
+          " * profile - optional profile directory name (Chromium-based browsers, e.g.",
+          "   `\"Default\"`, `\"Profile 1\"`; see chrome:\/\/version > Profile Path)",
+          " * args - optional list of extra command-line flags (e.g.",
+          "   `{ \"--no-default-browser-check\" }`)"
+        ],
+        "name" : "rules",
+        "parameters" : [
+
+        ],
+        "notes" : [
+
+        ],
+        "signature" : "BrowserRouter.rules",
+        "type" : "Variable",
+        "returns" : [
+
+        ],
+        "desc" : "Ordered list of routing rules; the first matching rule wins. Each rule is a",
+        "def" : "BrowserRouter.rules"
+      },
+      {
+        "doc" : "List of `function(url, scheme, host, params) -> newUrl|nil` applied before\nrouting, e.g. to unwrap redirect links. Returning nil keeps the URL as is.\nBy default unwraps links opened from Microsoft Teams.",
+        "stripped_doc" : [
+          "List of `function(url, scheme, host, params) -> newUrl|nil` applied before",
+          "routing, e.g. to unwrap redirect links. Returning nil keeps the URL as is.",
+          "By default unwraps links opened from Microsoft Teams."
+        ],
+        "name" : "urlRewriters",
+        "parameters" : [
+
+        ],
+        "notes" : [
+
+        ],
+        "signature" : "BrowserRouter.urlRewriters",
+        "type" : "Variable",
+        "returns" : [
+
+        ],
+        "desc" : "List of `function(url, scheme, host, params) -> newUrl|nil` applied before",
+        "def" : "BrowserRouter.urlRewriters"
+      },
+      {
+        "doc" : "Set any of `defaultBrowser`, `defaultProfile`, `defaultArgs`, `rules`,\n`urlRewriters`, `browsers` from a table (e.g. one loaded from a private\nconfig file). `browsers` entries are merged into the built-in dictionary.\n\nParameters:\n * config - table with any of the fields above; missing fields are left\n   unchanged\n\nReturns:\n * The BrowserRouter object",
+        "stripped_doc" : [
+          "Set any of `defaultBrowser`, `defaultProfile`, `defaultArgs`, `rules`,",
+          "`urlRewriters`, `browsers` from a table (e.g. one loaded from a private",
+          "config file). `browsers` entries are merged into the built-in dictionary.",
+          ""
+        ],
+        "name" : "configure",
+        "parameters" : [
+          " * config - table with any of the fields above; missing fields are left",
+          "   unchanged",
+          ""
+        ],
+        "notes" : [
+
+        ],
+        "signature" : "BrowserRouter:configure(config) -> self",
+        "type" : "Method",
+        "returns" : [
+          " * The BrowserRouter object"
+        ],
+        "desc" : "Set any of `defaultBrowser`, `defaultProfile`, `defaultArgs`, `rules`,",
+        "def" : "BrowserRouter:configure(config) -> self"
+      },
+      {
+        "doc" : "Open `url` in the browser with bundle ID `browser`.\n\nParameters:\n * url - the URL to open\n * browser - bundle ID or name from `browsers`\n * profile - optional profile directory (Chromium-based browsers)\n * args - optional list of extra command-line flags\n\nReturns:\n * The BrowserRouter object\n\nNotes:\n * Profile and flags are command-line arguments, so they only take effect\n   when the browser is launched; if it is already running the URL opens in\n   its current (last used) profile.",
+        "stripped_doc" : [
+          "Open `url` in the browser with bundle ID `browser`.",
+          ""
+        ],
+        "name" : "openURL",
+        "parameters" : [
+          " * url - the URL to open",
+          " * browser - bundle ID or name from `browsers`",
+          " * profile - optional profile directory (Chromium-based browsers)",
+          " * args - optional list of extra command-line flags",
+          ""
+        ],
+        "notes" : [
+          " * Profile and flags are command-line arguments, so they only take effect",
+          "   when the browser is launched; if it is already running the URL opens in",
+          "   its current (last used) profile."
+        ],
+        "signature" : "BrowserRouter:openURL(url, browser[, profile[, args]]) -> self",
+        "type" : "Method",
+        "returns" : [
+          " * The BrowserRouter object",
+          ""
+        ],
+        "desc" : "Open `url` in the browser with bundle ID `browser`.",
+        "def" : "BrowserRouter:openURL(url, browser[, profile[, args]]) -> self"
+      },
+      {
+        "doc" : "Rewrite `url` via `urlRewriters`, find the first matching rule and open it\nin that rule's browser (or the default browser).\n\nParameters:\n * url - the full URL\n * scheme, host, params - optional, as passed by `hs.urlevent.httpCallback`\n\nReturns:\n * The BrowserRouter object",
+        "stripped_doc" : [
+          "Rewrite `url` via `urlRewriters`, find the first matching rule and open it",
+          "in that rule's browser (or the default browser).",
+          ""
+        ],
+        "name" : "route",
+        "parameters" : [
+          " * url - the full URL",
+          " * scheme, host, params - optional, as passed by `hs.urlevent.httpCallback`",
+          ""
+        ],
+        "notes" : [
+
+        ],
+        "signature" : "BrowserRouter:route(url[, scheme, host, params]) -> self",
+        "type" : "Method",
+        "returns" : [
+          " * The BrowserRouter object"
+        ],
+        "desc" : "Rewrite `url` via `urlRewriters`, find the first matching rule and open it",
+        "def" : "BrowserRouter:route(url[, scheme, host, params]) -> self"
+      },
+      {
+        "doc" : "Start handling http(s) links (sets `hs.urlevent.httpCallback`).\n\nReturns:\n * The BrowserRouter object",
+        "stripped_doc" : [
+          "Start handling http(s) links (sets `hs.urlevent.httpCallback`).",
+          ""
+        ],
+        "name" : "start",
+        "parameters" : [
+
+        ],
+        "notes" : [
+
+        ],
+        "signature" : "BrowserRouter:start() -> self",
+        "type" : "Method",
+        "returns" : [
+          " * The BrowserRouter object"
+        ],
+        "desc" : "Start handling http(s) links (sets `hs.urlevent.httpCallback`).",
+        "def" : "BrowserRouter:start() -> self"
+      },
+      {
+        "doc" : "Stop handling http(s) links (clears `hs.urlevent.httpCallback`).\n\nReturns:\n * The BrowserRouter object",
+        "stripped_doc" : [
+          "Stop handling http(s) links (clears `hs.urlevent.httpCallback`).",
+          ""
+        ],
+        "name" : "stop",
+        "parameters" : [
+
+        ],
+        "notes" : [
+
+        ],
+        "signature" : "BrowserRouter:stop() -> self",
+        "type" : "Method",
+        "returns" : [
+          " * The BrowserRouter object"
+        ],
+        "desc" : "Stop handling http(s) links (clears `hs.urlevent.httpCallback`).",
+        "def" : "BrowserRouter:stop() -> self"
+      }
+    ],
+    "name" : "BrowserRouter"
+  }
+]
